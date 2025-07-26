@@ -1,10 +1,16 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
+import generateToken from '../utils/generateToken.js';
 
 export const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+
+        const existingUser = await User.findOne({ $or: [{ username }, { email }]});
+        if (existingUser) return res.status(400).json({ message: 'El usuario ya existe' });
+
+        const verificationToken = generateToken();
 
         // Validación básica
         if (!username || !email || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
@@ -17,11 +23,15 @@ export const registerUser = async (req, res) => {
             username,
             email,
             password: hashedPassword,
+            verificationToken
         });
 
         await newUser.save();
 
-        res.status(201).json({ message: 'Usuario registrado correctamente' });
+        res.status(201).json({
+            message: 'Usuario registrado. Verificá tu correo electrónico',
+            userId: newUser._id
+        });
     } catch (error) {
         console.error('Error en registerUser:', error);
         res.status(500).json({ message: 'Error al registrar el usuario' });
