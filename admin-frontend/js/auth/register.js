@@ -1,28 +1,18 @@
 import { addPasswordToggle } from "../components/togglePasswordVisibility.js";
 import { attachPasswordRules } from "../components/passwordRules.js";
 import { isPasswordValid } from "../utils/validatePasswordStrength.js";
+import { showMessage } from "../utils/showMessage.js";
 
 const form = document.getElementById('form-register');
 const passwordInput = document.getElementById('password');
-const passwordRules = document.getElementById('password-rules');
 const messageDiv = document.getElementById('message');
 
 // Activar validación visual de contraseña
 attachPasswordRules(passwordInput);
 
 // Mostrar/ocultar contraseñas (sin esperar DOMContentLoaded)
-addPasswordToggle("#password", "#togglePassword");
-addPasswordToggle("#confirm-password", "#toggleConfirmPassword");
-
-
-// Mostrar mensaje debajo del botón
-function showMessage(text, type = 'error') {
-    messageDiv.textContent = text;
-    messageDiv.className = `text-sm text-center mb-4 ${
-        type === 'error' ? 'text-red-600' : 'text-green-600'
-    }`;
-    messageDiv.classList.remove('hidden');
-}
+addPasswordToggle('#password', '#togglePassword');
+addPasswordToggle('#confirmPassword', '#toggleConfirmPassword');
 
 // Enviar datos al backend
 form.addEventListener('submit', async (e) => {
@@ -36,18 +26,18 @@ form.addEventListener('submit', async (e) => {
 
     // Válidación de fortaleza de la contraseña
     if (!isPasswordValid(password)) {
-        showMessage('La contraseña no cumple con los requisitos mínimos de seguridad.', 'error');
+        showMessage(messageDiv, 'La contraseña no cumple con los requisitos mínimos de seguridad.', 'error');
         return;
     }
 
     // Validación simple de coincidencia de contraseñas
     if (password !== confirmPassword) {
-        showMessage('Las contraseñas no coinciden', 'error');
+        showMessage(messageDiv, 'Las contraseñas no coinciden', 'error');
         return;
     }
 
     try {
-        const res = await fetch('http://localhost:3000/api/auth/register', {
+        const res = await fetch('http://localhost:5000/api/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -59,11 +49,10 @@ form.addEventListener('submit', async (e) => {
 
         if (!res.ok) throw new Error(data.message || "Error al registrar");
 
-        showMessage('Registro exitoso. Por favor, verifica tu correo.', 'success');
+        showMessage(messageDiv, 'Registro exitoso. Por favor, verifica tu correo.', 'success');
         form.reset();
-        passwordRules.classList.add('hidden');
     } catch (error) {
         console.error(error);
-        showMessage(error.message);
+        showMessage(messageDiv, error.message, 'error');
     }
 });

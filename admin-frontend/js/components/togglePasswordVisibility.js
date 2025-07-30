@@ -18,7 +18,7 @@ export function addPasswordToggle(inputSelector, toggleBtnSelector) {
     `;
 
     let visible = false;
-    toggleBtn.innerHTML = eyeIcon;
+    toggleBtn.innerHTML = eyeOffIcon;
 
     // Evento toggle
     toggleBtn.addEventListener('click', () => {
