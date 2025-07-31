@@ -8,10 +8,8 @@ export const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        const existingUser = await User.findOne({ $or: [{ username }, { email }]});
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) return res.status(400).json({ message: 'El usuario ya existe' });
-
-        const verificationToken = generateToken();
 
         // Validación básica
         if (!username || !email || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
@@ -19,17 +17,29 @@ export const registerUser = async (req, res) => {
         // Encriptar contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Crear usuario
-        const newUser = new User({
+        // Crear usuario sin el token
+        let newUser = new User({
             username,
             email,
             password: hashedPassword,
-            verificationToken
+            verified: false
         });
 
+        // Guardar usuario para que tenga _id generado
+        newUser = await newUser.save();
+
+        // Crear token JWT para verificación con el _id ya generado
+        const verificationToken = jwt.sign(
+            { userId: newUser._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        // Guardar token en el usuario
+        newUser.verificationToken = verificationToken;
         await newUser.save();
 
-        // Se envía el mail
+        // Enviar correo con token JWT
         await sendVerificationEmail(email, verificationToken);
 
         res.status(201).json({
@@ -75,5 +85,27 @@ export const loginUser = async (req, res) => {
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ message: 'Error en el servidor', error: error.message });
+    }
+}
+
+export const verifyEmail = async (req, res) => {
+    const { token } = req.query;
+    console.log('Token recibido:', token);
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.userId);
+
+        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+        if (user.verified) return res.status(400).json({ message: 'La cuenta ya fue verificada.' });
+
+        user.verified = true;
+        await user.save();
+
+        res.status(200).json({ message: 'Cuenta verificada correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({ message: 'Token inválido o expirado' });
     }
 }

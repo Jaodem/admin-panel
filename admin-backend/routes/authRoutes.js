@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser } from '../controllers/authController.js';
+import { registerUser, loginUser, verifyEmail } from '../controllers/authController.js';
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -7,6 +7,7 @@ const router = express.Router();
 // Endpoint para registrar un usuario
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.get('/verify-email', verifyEmail);
 
 // Ruta protegida
 router.get('/profile', verifyToken, (req, res) => {
