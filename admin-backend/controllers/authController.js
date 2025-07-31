@@ -109,3 +109,31 @@ export const verifyEmail = async (req, res) => {
         res.status(400).json({ message: 'Token inválido o expirado' });
     }
 }
+
+export const resendVerificationEmail = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!email) return res.status(400).json({ message: 'El correo electrónico es requerido.' });
+
+        if (!user) return res.status(404).json({ message: 'Usuario no encontrado.' });
+
+        if (user.verified) return res.status(400).json({ message: 'La cuenta ya está verificada.' });
+
+        // Generar un nuevo token de verificación
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        await sendVerificationEmail(user.email, token);
+
+        res.status(200).json({ message: 'Correo de verificación reenviado.' });
+    } catch (error) {
+        console.error('Error al reenviar verificación:', error);
+        res.status(500).json({ message: 'Error al reenviar verificación.' });
+    }
+}
