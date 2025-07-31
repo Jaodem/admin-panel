@@ -49,8 +49,14 @@ form.addEventListener('submit', async (e) => {
 
         if (!res.ok) throw new Error(data.message || "Error al registrar");
 
-        showMessage(messageDiv, 'Registro exitoso. Por favor, verifica tu correo.', 'success');
+        // Se guarda el email en localStorage
+        sessionStorage.setItem('pendingEmail', email);
+        showMessage(messageDiv, 'Registro exitoso. Por favor, revisá tu correo para verificar tu cuenta. Redirigiendo a verificación....', 'success');
         form.reset();
+
+        setTimeout(() => {
+            window.location.href = 'check-email.html';
+        }, 3000);
     } catch (error) {
         console.error(error);
         showMessage(messageDiv, error.message, 'error');

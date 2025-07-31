@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro | AdminPanel</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-md rounded-xl p-8 max-w-md w-full">
         <h2 class="text-2xl font-semibold mb-6 text-center text-gray-800">
@@ -16,13 +18,15 @@
                 <label for="username" class="block mb-1 text-sm font-medium text-gray-700">
                     Nombre de usuario
                 </label>
-                <input type="text" id="username" name="username" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                <input type="text" id="username" name="username" required
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
             </div>
             <div>
                 <label for="email" class="block mb-1 text-sm font-medium text-gray-700">
                     Correo electrónico
                 </label>
-                <input type="email" name="email" id="email" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                <input type="email" name="email" id="email" required
+                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
             </div>
             <!-- Contraseña -->
             <div>
@@ -31,7 +35,8 @@
                 </label>
                 <div>
                     <div class="relative" id="password-wrapper">
-                        <input type="password" name="password" id="password" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                        <input type="password" name="password" id="password" required
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
                         <button type="button" id="togglePassword" aria-label="Mostrar/ocultar contraseña"
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 ">
                             <!-- El ícono se insertará por JS -->
@@ -48,8 +53,10 @@
                 </label>
                 <div>
                     <div class="relative">
-                        <input type="password" name="confirmPassword" id="confirmPassword" required class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
-                        <button type="button" id="toggleConfirmPassword" aria-label="Mostrar/ocultar confirmar contraseña"
+                        <input type="password" name="confirmPassword" id="confirmPassword" required
+                            class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+                        <button type="button" id="toggleConfirmPassword"
+                            aria-label="Mostrar/ocultar confirmar contraseña"
                             class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
                             <!-- El ícono se insertará por JS -->
                         </button>
@@ -71,4 +78,5 @@
 
     <script type="module" src="./js/auth/register.js"></script>
 </body>
+
 </html>
