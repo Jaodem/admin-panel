@@ -63,6 +63,12 @@ export const loginUser = async (req, res) => {
 
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
+        if (!user.verified) {
+            return res.status(401).json({
+                message: 'Tu cuenta aún no fue verificada. Revisá tu correo o solicitá un nuevo enlace.'
+            });
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (!isMatch) return res.status(401).json({ message: 'Credenciales inválidas' });
