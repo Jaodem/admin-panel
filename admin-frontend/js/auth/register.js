@@ -39,24 +39,33 @@ form.addEventListener('submit', async (e) => {
     try {
         const res = await fetch('http://localhost:3000/api/auth/register', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password }),
         });
 
         const data = await res.json();
 
-        if (!res.ok) throw new Error(data.message || "Error al registrar");
+        // Si ya estaba registrado pero no verificado, también redirigimos
+        if (data.alreadyRegistered) {
+            sessionStorage.setItem('pendingEmail', email);
+            showMessage(messageDiv, 'Ya estás registrado pero no verificaste tu cuenta. Te reenviamos el enlace. Redirigiendo a verificación...', 'info');
+            setTimeout(() => {
+                window.location.href = 'check-email.html';
+            }, 5000);
+            return;
+        }
 
-        // Se guarda el email en localStorage
-        sessionStorage.setItem('pendingEmail', email);
-        showMessage(messageDiv, 'Registro exitoso. Por favor, revisá tu correo para verificar tu cuenta. Redirigiendo a verificación....', 'success');
-        form.reset();
+        if (res.ok) {
+            sessionStorage.setItem('pendingEmail', email);
+            showMessage(messageDiv, 'Registro exitoso. Por favor, revisá tu correo para verificar tu cuenta. Redirigiendo a verificación....', 'success');
+            form.reset();
+            setTimeout(() => {
+                window.location.href = 'check-email.html';
+            }, 5000);
+            return;
+        }
 
-        setTimeout(() => {
-            window.location.href = 'check-email.html';
-        }, 3000);
+        throw Error(data.message || 'Error al registrar');
     } catch (error) {
         console.error(error);
         showMessage(messageDiv, error.message, 'error');

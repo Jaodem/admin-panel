@@ -9,7 +9,17 @@ export const registerUser = async (req, res) => {
         const { username, email, password } = req.body;
 
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
-        if (existingUser) return res.status(400).json({ message: 'El usuario ya existe' });
+        if (existingUser) {
+            if (!existingUser.verified) {
+                // Se reenvía el correo de verificación
+                await sendVerificationEmail(existingUser.email, existingUser.verificationToken);
+                return res.status(200).json({
+                    message: 'Ya estás registrado pero no verificaste tu cuenta. Revisá tu correo.',
+                    alreadyRegistered: true,
+                });
+            }
+            return res.status(400).json({ message: 'El usuario ya existe' });
+        }
 
         // Validación básica
         if (!username || !email || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
