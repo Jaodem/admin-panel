@@ -30,6 +30,7 @@ export const registerUser = async (req, res) => {
         // Crear usuario sin el token
         let newUser = new User({
             username,
+            usernameLower: username.toLowerCase(),
             email,
             password: hashedPassword,
             verified: false
@@ -63,13 +64,22 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
     // Válidación básica
-    if (!email || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    if (!identifier || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
     try {
-        const user = await User.findOne({ email });
+        // Se normaliza el identifier a minúsculas
+        const identifierLower = identifier.toLowerCase();
+
+        // Se busca por email o username (insensible a mayúsculas)
+        const user = await User.findOne({
+            $or: [
+                { email: identifierLower },
+                { usernameLower: identifierLower }
+            ]
+        });
 
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
