@@ -39,7 +39,7 @@ loginForm.addEventListener('submit', async (e) => {
         localStorage.setItem('token', data.token);
 
         // Redirigir al panel
-        window.location.href = 'panel.html';
+        window.location.href = 'dashboard.html';
     } catch (error) {
         console.error(error);
         showMessage(messageDiv, 'Error de conexión con el servidor', 'error');
