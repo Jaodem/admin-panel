@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
     },
     verificationToken: {
         type: String
+    },
+    passwordChangedAt: {
+        type: Date,
+        default: null
     }
 }, {
     timestamps: true
