@@ -13,7 +13,7 @@ if (pendingEmail) {
 }
 
 // Reenviar correo
-resendBtn.addEventListener('click', async() => {
+resendBtn.addEventListener('click', async () => {
     if (!pendingEmail) return;
 
     // Se desactiva el botón y se inicia el temporizador
@@ -36,7 +36,7 @@ resendBtn.addEventListener('click', async() => {
         }
 
         message.textContent = 'Correo reenviado con éxito. Revisá tu bandeja de entrada.';
-    } catch(error) {
+    } catch (error) {
         console.error(error);
         message.textContent = 'Error de red o del servidor';
     }

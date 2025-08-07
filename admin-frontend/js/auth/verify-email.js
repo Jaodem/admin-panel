@@ -10,9 +10,9 @@ const token = url.searchParams.get('token');
 if (!token) {
     messageEl.textContent = 'Token de verificación no proporcionado.';
 } else {
-    
+
     messageEl.textContent = 'Verificando tu cuenta, por favor espera...';
-    
+
     // Llamada al backend para verificar el token
     fetch(`http://localhost:3000/api/auth/verify-email?token=${encodeURIComponent(token)}`, {
         method: 'GET',

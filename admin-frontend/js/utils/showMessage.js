@@ -16,7 +16,7 @@ export function showMessage(container, message, type = 'info', duration = 5000) 
             text: 'text-blue-800'
         }
     }
-    
+
     const color = colors[type] || colors.info;
 
     container.classList.remove('hidden');

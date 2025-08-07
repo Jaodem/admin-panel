@@ -1,6 +1,8 @@
 import { requireAuth } from '../utils/authGuard.js';
 import { renderNavbar } from '../components/navbar.js';
 
-if (!requireAuth()) return;
+(() => {
+    if (!requireAuth()) return;
 
-renderNavbar('dashboard');
+    renderNavbar('dashboard');
+})();

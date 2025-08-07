@@ -9,7 +9,7 @@
 
 export function startRedirectCountdown(el, baseMessage, colorClass, redirectTo, delaySeconds = 5) {
     let secondsLeft = delaySeconds;
-    
+
     el.className = '';
     el.classList.add(colorClass);
 

@@ -7,11 +7,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
-    <main class="p-4">
+    <!-- Aquí se insertará el navbar dinámicamente -->
+
+    <main class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow">
         <h2 class="text-2xl font-semibold mb-4">
             Mi cuenta
         </h2>
-        <p>Aquí podrás ver los detalles de tu cuenta y cambiar la contraseña.</p>
+        <p class="mb-6 text-gray-600">
+            Aquí podrás ver los detalles de tu cuenta y cambiar la contraseña.
+        </p>
+
+        <div id="user-info" class="mb-6 space-y-2">
+            <p>
+                <strong>Nombre de usuario:</strong> <span id="username">Cargando...</span>
+            </p>
+            <p>
+                <strong>Email:</strong> <span id="email">Cargando...</span>
+            </p>
+        </div>
+
+        <div class="flex justify-end">
+            <a href="change-password.html" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-xl">
+                Cambiar contraseña
+            </a>
+        </div>
     </main>
 
     <script type="module" src="./js/pages/profile.js"></script>
