@@ -1,13 +1,14 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import generateToken from '../utils/generateToken.js';
 import sendVerificationEmail from '../emails/sendVerificationEmail.js';
-import sendPasswordChangeEmail from '../emails/sendPasswordChangedEmail.js';
 
 export const registerUser = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+
+        // Validación básica
+        if (!username || !email || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
         const existingUser = await User.findOne({ $or: [{ username }, { email }] });
         if (existingUser) {
@@ -21,9 +22,6 @@ export const registerUser = async (req, res) => {
             }
             return res.status(400).json({ message: 'El usuario ya existe' });
         }
-
-        // Validación básica
-        if (!username || !email || !password) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
 
         // Encriptar contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -82,17 +80,13 @@ export const loginUser = async (req, res) => {
             ]
         });
 
-        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+        const isValid = user && user.verified && await bcrypt.compare(password, user.password);
 
-        if (!user.verified) {
+        if (!isValid) {
             return res.status(401).json({
-                message: 'Tu cuenta aún no fue verificada. Revisá tu correo o solicitá un nuevo enlace.'
+                message: 'Credenciales inválidas o cuenta no verificada'
             });
         }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) return res.status(401).json({ message: 'Credenciales inválidas' });
 
         // Se genera el toke
         const token = jwt.sign(
@@ -113,84 +107,4 @@ export const loginUser = async (req, res) => {
         console.error('Error al iniciar sesión:', error);
         res.status(500).json({ message: 'Error en el servidor', error: error.message });
     }
-}
-
-export const verifyEmail = async (req, res) => {
-    const { token } = req.query;
-    console.log('Token recibido:', token);
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decoded.userId);
-
-        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
-
-        if (user.verified) return res.status(400).json({ message: 'La cuenta ya fue verificada.' });
-
-        user.verified = true;
-        await user.save();
-
-        res.status(200).json({ message: 'Cuenta verificada correctamente' });
-    } catch (error) {
-        console.error(error);
-        res.status(400).json({ message: 'Token inválido o expirado' });
-    }
-}
-
-export const resendVerificationEmail = async (req, res) => {
-    const { email } = req.body;
-
-    try {
-        const user = await User.findOne({ email });
-
-        if (!email) return res.status(400).json({ message: 'El correo electrónico es requerido.' });
-
-        if (!user) return res.status(404).json({ message: 'Usuario no encontrado.' });
-
-        if (user.verified) return res.status(400).json({ message: 'La cuenta ya está verificada.' });
-
-        // Generar un nuevo token de verificación
-        const token = jwt.sign(
-            { userId: user._id },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
-
-        await sendVerificationEmail(user.email, token);
-
-        res.status(200).json({ message: 'Correo de verificación reenviado.' });
-    } catch (error) {
-        console.error('Error al reenviar verificación:', error);
-        res.status(500).json({ message: 'Error al reenviar verificación.' });
-    }
-}
-
-export const changePassword = async (req, res) => {
-    const { currentPassword, newPassword } = req.body;
-
-    if (!currentPassword || !newPassword) return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-
-    try {
-        const user = await User.findById(req.user.userId);
-
-        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
-
-        // Validar contraseña actual
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-        if (!isMatch) return res.status(401).json({ message: 'Contraseña actual incorrecta' });
-
-        // Encriptar nueva contraseña
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        user.password = hashedPassword;
-        user.passwordChangedAt = new Date();
-
-        await user.save();
-
-        await sendPasswordChangeEmail(user.email);
-
-        return res.status(200).json({ message: 'Contraseña actualizada correctamente' });
-    } catch (error) {
-        console.error('Error al cambiar la contraseña:', error);
-        return res.status(500).json({ message: 'Error del servidor' });
-    }
-}
+};
