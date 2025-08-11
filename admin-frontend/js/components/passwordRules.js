@@ -9,7 +9,7 @@ export function attachPasswordRules(inputElement) {
     rules.id = 'passwordRules';
 
     rules.innerHTML = `
-        <li><span data-rule="length" class="mr-2 text-red-500">❌</span>Al menos 6 caracteres</li>
+        <li><span data-rule="length" class="mr-2 text-red-500">❌</span>Al menos 8 caracteres</li>
         <li><span data-rule="lower" class="mr-2 text-red-500">❌</span>Una letra minúscula</li>
         <li><span data-rule="upper" class="mr-2 text-red-500">❌</span>Una letra mayúscula</li>
         <li><span data-rule="number" class="mr-2 text-red-500">❌</span>Un número</li>
