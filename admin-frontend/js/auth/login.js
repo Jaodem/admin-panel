@@ -36,7 +36,11 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         // Guardar el token
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify({
+            username: data.username,
+            role: data.role,
+            avatar: data.avatar || './images/default-avatar.png'
+        }));
 
         // Redirigir al panel
         window.location.href = 'dashboard.html';

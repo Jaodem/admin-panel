@@ -28,6 +28,15 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 8
     },
+    role: {
+        type: String,
+        enum: ['admin', 'user'],
+        default: 'user'
+    },
+    avatar: {
+        type: String,
+        default: './images/default-avatar.png'
+    },
     verified: {
         type: Boolean,
         default: false
