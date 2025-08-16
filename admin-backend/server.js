@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 
 dotenv.config();
 
@@ -11,6 +12,11 @@ const app = express();
 // Middlewares
 app.use(cors());
 app.use(express.json());
+
+// Servir archivos estáticos de la carpeta uploads
+app.use('/uploads', express.static('uploads'));
+
+app.use('/api/profile', profileRoutes);
 
 // Rutas
 app.use('/api/auth', authRoutes);

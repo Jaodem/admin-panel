@@ -36,10 +36,13 @@ loginForm.addEventListener('submit', async (e) => {
         }
 
         // Guardar el token
+        localStorage.setItem('token', data.token);
+
+        // Guardar datos básicos del usuario para el navbar
         localStorage.setItem('user', JSON.stringify({
-            username: data.username,
-            role: data.role,
-            avatar: data.avatar || './images/default-avatar.png'
+            username: data.user?.username,
+            role: data.user?.role || 'user',
+            avatar: data.user?.avatar || './images/default-avatar.png'
         }));
 
         // Redirigir al panel

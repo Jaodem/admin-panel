@@ -1,38 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi cuenta</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
+
+<body class="bg-gray-100 text-gray-900 transition-colors duration-300">
     <!-- Aquí se insertará el navbar dinámicamente -->
 
     <main class="max-w-2xl mx-auto mt-8 p-6 bg-white rounded-2xl shadow">
         <h2 class="text-2xl font-semibold mb-4">
             Mi cuenta
         </h2>
-        <p class="mb-6 text-gray-600">
-            Aquí podrás ver los detalles de tu cuenta y cambiar la contraseña.
-        </p>
 
-        <div id="user-info" class="mb-6 space-y-2">
-            <p>
-                <strong>Nombre de usuario:</strong> <span id="username">Cargando...</span>
-            </p>
-            <p>
-                <strong>Email:</strong> <span id="email">Cargando...</span>
-            </p>
-        </div>
+        <!-- Sección superior: Foto y datos del usuario -->
+        <div class="flex items-center justify-between mb-6 gap-6">
+            <!-- Información del usuario -->
+            <div class="flex flex-col justify-center gap-2">
+                <p>
+                    <strong>Nombre de usuario:</strong> <span id="username">Cargando...</span>
+                </p>
+                <p>
+                    <strong>Email:</strong> <span id="email">Cargando...</span>
+                </p>
+                <a href="change-password.html"
+                    class="mt-2 inline-block bg-blue-600 hover:bg-blue-700 text-center text-white font-medium py-2 px-4 rounded-xl">
+                    Cambiar contraseña
+                </a>
+            </div>
 
-        <div class="flex justify-end">
-            <a href="change-password.html" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-xl">
-                Cambiar contraseña
-            </a>
+            <!-- Foto y botón -->
+            <div class="flex flex-col items-center gap-2">
+                <img id="profilePhoto" src="./images/default-avatar.png" alt="Foto de perfil"
+                    class="w-20 h-20 rounded-full object-cover border border-gray-300">
+                <input type="file" id="profilePhotoInput" accept="image/*" class="hidden">
+                <button id="changePhotoBtn"
+                    class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl">
+                    Cambiar foto
+                </button>
+            </div>
         </div>
     </main>
 
     <script type="module" src="./js/pages/profile.js"></script>
 </body>
+
 </html>

@@ -98,9 +98,12 @@ export const loginUser = async (req, res) => {
         res.status(200).json({
             message: 'Login exitoso',
             token,
-            username: user.username,
-            role: user.role,
-            avatar: user.avatar || '/images/default-avatar.png'
+            user: {
+                _id: user._id,
+                username: user.username,
+                role: user.role,
+                avatar: user.avatar || '/images/default-avatar.png'
+            }
         });
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
