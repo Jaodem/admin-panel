@@ -59,9 +59,16 @@
                     <p class="mb-4 text-sm text-gray-600">
                         Esta acción eliminará tu cuenta permanentemente.
                     </p>
-                    <input type="password" id="deletePassword" placeholder="Ingresá la contraseña para confirmar"
-                        class="w-full border border-gray-300 rounded-lg p-2 mb-4">
-                    <div class="flex justify-between gap-4">
+                    <div class="relative">
+                        <input type="password" id="deletePassword" placeholder="Ingresá la contraseña para confirmar"
+                            class="w-full pr-10 px-4 py-2 border border-gray-300 text-gray-900 rounded-xl focus:outline-none focus:ring focus:border-blue-300 ">
+                        <button type="button" id="toggleDeletePassword"
+                            aria-label="Mostrar/ocultar confirmar contraseña"
+                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                            <!-- El ícono se insertará por JS -->
+                        </button>
+                    </div>
+                    <div class="flex justify-between gap-4 mt-2">
                         <button id="cancelDeleteBtn" class="bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded-xl">
                             Cancelar
                         </button>

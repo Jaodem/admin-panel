@@ -2,11 +2,15 @@ import { requireAuth } from '../utils/authGuard.js';
 import { renderNavbar } from '../components/navbar.js';
 import { decodeToken } from '../utils/decodeToken.js';
 import { showMessage } from '../utils/showMessage.js';
+import { addPasswordToggle } from '../components/togglePasswordVisibility.js';
 
 (() => {
     if (!requireAuth()) return;
 
     renderNavbar('profile');
+
+    // Mostrar/ocultar contraseña
+    addPasswordToggle('#deletePassword', '#toggleDeletePassword')
 
     const API_BASE = 'http://localhost:3000';
 
