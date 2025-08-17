@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 const sendVerificationEmail = async (to, token) => {
     try {
         const verificationLink = `${process.env.FRONTEND_URL}/verify-email.html?token=${token}`;
-    
+
         const mailOptions = {
             from: `"Gestión de Usuarios | AdminDashboard" <${process.env.EMAIL_USER}>`,
             to,

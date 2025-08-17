@@ -26,10 +26,17 @@
                 <p>
                     <strong>Email:</strong> <span id="email">Cargando...</span>
                 </p>
+                <p>
+                    <strong>Rol:</strong> <span id="role">Cargando...</span>
+                </p>
                 <a href="change-password.html"
                     class="mt-2 inline-block bg-blue-600 hover:bg-blue-700 text-center text-white font-medium py-2 px-4 rounded-xl">
                     Cambiar contraseña
                 </a>
+                <button id="deleteAccountBtn"
+                    class="mt-4 inline-block bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-xl">
+                    Eliminar cuenta
+                </button>
             </div>
 
             <!-- Foto y botón -->
@@ -42,8 +49,32 @@
                     Cambiar foto
                 </button>
             </div>
+
+            <!-- Modal eliminar cuenta -->
+            <div id="deleteModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div class="bg-white rounded-xl p-6 max-w-sm w-full">
+                    <h3 class="text-lg font-semibold mb-4">
+                        ¿Estás seguro?
+                    </h3>
+                    <p class="mb-4 text-sm text-gray-600">
+                        Esta acción eliminará tu cuenta permanentemente.
+                    </p>
+                    <input type="password" id="deletePassword" placeholder="Ingresá la contraseña para confirmar"
+                        class="w-full border border-gray-300 rounded-lg p-2 mb-4">
+                    <div class="flex justify-between gap-4">
+                        <button id="cancelDeleteBtn" class="bg-gray-300 hover:bg-gray-400 py-2 px-4 rounded-xl">
+                            Cancelar
+                        </button>
+                        <button id="confirmDeleteBtn"
+                            class="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-xl">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
+    <div id="message" class="fixed top-5 right-5 z-50 space-y-2"></div>
 
     <script type="module" src="./js/pages/profile.js"></script>
 </body>

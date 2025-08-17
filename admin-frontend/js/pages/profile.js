@@ -1,6 +1,7 @@
 import { requireAuth } from '../utils/authGuard.js';
 import { renderNavbar } from '../components/navbar.js';
 import { decodeToken } from '../utils/decodeToken.js';
+import { showMessage } from '../utils/showMessage.js';
 
 (() => {
     if (!requireAuth()) return;
@@ -14,6 +15,13 @@ import { decodeToken } from '../utils/decodeToken.js';
     const profilePhoto = document.getElementById('profilePhoto');
     const profilePhotoInput = document.getElementById('profilePhotoInput');
     const changePhotoBtn = document.getElementById('changePhotoBtn');
+    const messageContainer = document.getElementById('message');
+
+    // Botón eliminar cuenta
+    const deleteBtn = document.getElementById('deleteAccountBtn');
+    const deleteModal = document.getElementById('deleteModal');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
 
     // Cargar perfil desde el backend
     const loadProfile = async () => {
@@ -28,6 +36,7 @@ import { decodeToken } from '../utils/decodeToken.js';
 
             document.getElementById('username').textContent = user.username || 'Desconocido';
             document.getElementById('email').textContent = user.email || 'Desconocido';
+            document.getElementById('role').textContent = user.role || 'Usuario';
 
             // Normalizar URL del avatar
             const avatarUrl = user.avatar?.startsWith('http')
@@ -35,7 +44,7 @@ import { decodeToken } from '../utils/decodeToken.js';
                 : user.avatar
                     ? `${API_BASE}${user.avatar}`
                     : './images/default-avatar.png';
-                
+
             profilePhoto.src = avatarUrl;
             // Mantener en localStorage para el navbar
             const stored = JSON.parse(localStorage.getItem('user')) || {};
@@ -95,14 +104,50 @@ import { decodeToken } from '../utils/decodeToken.js';
 
             const avatarNav = document.getElementById('userAvatar');
             if (avatarNav) avatarNav.src = fullUrl;
-            
+
         } catch (error) {
             console.error(error);
-            alert('No se pudo subir la imagen');
+            showMessage(messageContainer, 'No se pudo subir la imagen', 'error');
             // Volver a la imagen anterior si falla
             profilePhoto.src = previousSrc;
         } finally {
             URL.revokeObjectURL(previewUrl);
+        }
+    });
+
+    // Abrir el modal
+    deleteBtn.addEventListener('click', () => deleteModal.classList.remove('hidden'));
+
+    // Cancelar
+    cancelDeleteBtn.addEventListener('click', () => deleteModal.classList.add('hidden'));
+
+    // Confirmar eliminación con contraseña
+    confirmDeleteBtn.addEventListener('click', async () => {
+        const password = document.getElementById('deletePassword').value.trim();
+        if (!password) {
+            showMessage(messageContainer, 'Debes ingresar tu contraseña para eliminar la cuenta', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API_BASE}/api/profile`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({ password })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.message || 'No se pudo eliminar la cuenta');
+
+            // Limpiar almacenamiento y redirigir al login
+            localStorage.clear();
+            window.location.href = 'login.html';
+        } catch (error) {
+            console.error(error);
+            showMessage(messageContainer, error.message || 'Error al eliminar la cuenta', 'error');
         }
     });
 })();

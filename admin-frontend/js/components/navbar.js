@@ -28,7 +28,7 @@ export function renderNavbar(currentPage = 'dashboard') {
             <div class="relative flex items-center gap-4">
 
                 <div id="userMenuBtn" class="flex items-center cursor-pointer select-none">
-                    <img src="/images/default-avatar.png" alt="Avatar" id="userAvatar" class="w-10 h-10 rounded-full mr-3 object-cover" />
+                    <img src="./images/default-avatar.png" alt="Avatar" id="userAvatar" class="w-10 h-10 rounded-full mr-3 object-cover" />
                     <div class="hidden md:block text-white">
                         <div id="userName" class="font-semibold"></div>
                         <div id="userRole" class="text-sm opacity-75 lowercase"></div>
@@ -49,15 +49,18 @@ export function renderNavbar(currentPage = 'dashboard') {
 
     document.body.prepend(nav);
 
-    // Obtener datos de usuario almacenados en localStorage (o donde los tengas)
+    // Obtener datos de usuario almacenados en localStorage
     const user = JSON.parse(localStorage.getItem('user')) || {};
+
     const avatarEl = document.getElementById('userAvatar');
     const userNameEl = document.getElementById('userName');
     const userRoleEl = document.getElementById('userRole');
     const dropdownUserName = document.getElementById('dropdownUserName');
     const dropdownUserRole = document.getElementById('dropdownUserRole');
 
-    avatarEl.src = user.avatar || './images/default-avatar.png';
+    // Mostrar avatar default si user.avatar es null/undefined
+    avatarEl.src = (user.avatar && user.avatar !== 'null') ? user.avatar : './images/default-avatar.png';
+
     userNameEl.textContent = user.username || 'Usuario';
     userRoleEl.textContent = user.role || 'user';
     dropdownUserName.textContent = user.username || 'Usuario';

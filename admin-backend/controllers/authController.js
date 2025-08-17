@@ -32,7 +32,8 @@ export const registerUser = async (req, res) => {
             usernameLower: username.toLowerCase(),
             email,
             password: hashedPassword,
-            verified: false
+            verified: false,
+            avatar: null
         });
 
         // Guardar usuario para que tenga _id generado
@@ -92,7 +93,7 @@ export const loginUser = async (req, res) => {
         const token = jwt.sign(
             { userId: user._id, email: user.email, username: user.username },
             process.env.JWT_SECRET,
-            { expiresIn: '2h'}
+            { expiresIn: '2h' }
         );
 
         res.status(200).json({
@@ -102,7 +103,7 @@ export const loginUser = async (req, res) => {
                 _id: user._id,
                 username: user.username,
                 role: user.role,
-                avatar: user.avatar || '/images/default-avatar.png'
+                avatar: user.avatar
             }
         });
     } catch (error) {

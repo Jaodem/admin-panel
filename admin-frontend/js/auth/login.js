@@ -42,11 +42,14 @@ loginForm.addEventListener('submit', async (e) => {
         localStorage.setItem('user', JSON.stringify({
             username: data.user?.username,
             role: data.user?.role || 'user',
-            avatar: data.user?.avatar || './images/default-avatar.png'
+            avatar: data.user?.avatar
         }));
 
         // Redirigir al panel
-        window.location.href = 'dashboard.html';
+        showMessage(messageDiv, 'Redirigiendo al panel...', 'success');
+        setTimeout(() => {
+            window.location.href = 'dashboard.html';
+        }, 3000);
     } catch (error) {
         console.error(error);
         showMessage(messageDiv, 'Error de conexión con el servidor', 'error');

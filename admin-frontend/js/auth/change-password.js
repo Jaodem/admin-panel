@@ -3,7 +3,7 @@ import { addPasswordToggle } from '../components/togglePasswordVisibility.js';
 import { showMessage } from '../utils/showMessage.js';
 import { requireAuth } from '../utils/authGuard.js';
 import { renderNavbar } from '../components/navbar.js';
-import { isPasswordStrong } from '../utils/validatePasswordStrength.js';
+import { isPasswordValid } from '../utils/validatePasswordStrength.js';
 
 (() => {
     if (!requireAuth()) return;
@@ -35,7 +35,7 @@ import { isPasswordStrong } from '../utils/validatePasswordStrength.js';
         const confirmNewPassword = confirmNewPasswordInput.value.trim();
 
         // Valida nueva contraseña
-        if (!isPasswordStrong(newPassword)) {
+        if (!isPasswordValid(newPassword)) {
             showMessage(alertContainer, 'La nueva contraseña no cumple con los requisitos de seguridad.', 'error');
             return;
         }

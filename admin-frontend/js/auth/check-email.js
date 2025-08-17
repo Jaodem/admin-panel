@@ -1,4 +1,5 @@
 import { startCountdown } from "../utils/startCountdown.js";
+import { showMessage } from "../utils/showMessage.js";
 
 const emailInfo = document.getElementById('user-email');
 const resendBtn = document.getElementById('resendBtn');
@@ -31,13 +32,13 @@ resendBtn.addEventListener('click', async () => {
         const data = await response.json();
 
         if (!response.ok) {
-            message.textContent = data.message || 'Error al reenviar el correo';
+            showMessage(message, data.message || 'Error al reenviar el correo', 'error');
             return;
         }
 
-        message.textContent = 'Correo reenviado con éxito. Revisá tu bandeja de entrada.';
+        showMessage(message, 'Correo reenviado con éxito. Revisá tu bandeja de entrada.', 'success');
     } catch (error) {
         console.error(error);
-        message.textContent = 'Error de red o del servidor';
+        showMessage(message, 'Error de red o del servidor', 'error');
     }
 });
