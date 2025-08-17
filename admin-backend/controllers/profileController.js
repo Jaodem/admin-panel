@@ -76,7 +76,7 @@ export const deleteProfile = async (req, res) => {
             } catch (error) {
                 console.error('Error en eliminación diferida:', error);
             }
-        }, 5000);
+        }, 4000);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al eliminar la cuenta', error: error.message });

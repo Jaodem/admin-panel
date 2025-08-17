@@ -146,9 +146,14 @@ import { addPasswordToggle } from '../components/togglePasswordVisibility.js';
             const data = await res.json();
             if (!res.ok) throw new Error(data.message || 'No se pudo eliminar la cuenta');
 
-            // Limpiar almacenamiento y redirigir al login
-            localStorage.clear();
-            window.location.href = 'login.html';
+            // Mostrar un mensaje de exito
+            showMessage(messageContainer, 'Cuenta eliminada satisfactoriamente. Redirigiendo...', 'success');
+
+            // Se limpia storage después de un delay
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.href = 'login.html';
+            }, 3000);
         } catch (error) {
             console.error(error);
             showMessage(messageContainer, error.message || 'Error al eliminar la cuenta', 'error');
