@@ -22,10 +22,20 @@ export const uploadAvatar = async (req, res) => {
 
         if (!req.file) return res.status(400).json({ message: 'No se subió ningún archivo' });
 
-        // URL absoluta para que funcione desde cualquier puerto
+        // Buscar el usuario
+        const user = await User.findById(userId);
+
+        // Eliminar el avatar anterior si existe
+        if (user.avatar && user.avatar !== 'null') {
+            const avatarPatch = path.join('uploads', path.basename(user.avatar));
+            if (fs.existsSync(avatarPatch)) fs.unlinkSync(avatarPatch);
+        }
+
+        // URL absoluta para la nueva imagen
         const avatarUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
 
-        const user = await User.findByIdAndUpdate(
+        // Actualizar usuario con el nuevo avatar
+        const updateUser = await User.findByIdAndUpdate(
             userId,
             { avatar: avatarUrl },
             { new: true }
@@ -33,7 +43,7 @@ export const uploadAvatar = async (req, res) => {
 
         res.status(200).json({
             message: 'Avatar actualizado correctamente',
-            avatar: user.avatar
+            avatar: updateUser.avatar
         });
     } catch (error) {
         console.error(error);
