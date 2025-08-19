@@ -26,12 +26,17 @@ export const registerUser = async (req, res) => {
         // Encriptar contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Verificar si es el primer usuario
+        const userCount = await User.countDocuments();
+        const role = userCount === 0 ? 'admin' : 'user';
+
         // Crear usuario sin el token
         let newUser = new User({
             username,
             usernameLower: username.toLowerCase(),
             email,
             password: hashedPassword,
+            role,
             verified: false,
             avatar: null
         });
@@ -55,7 +60,8 @@ export const registerUser = async (req, res) => {
 
         res.status(201).json({
             message: 'Usuario registrado. Verificá tu correo electrónico',
-            userId: newUser._id
+            userId: newUser._id,
+            role: newUser.role
         });
     } catch (error) {
         console.error('Error en registerUser:', error);

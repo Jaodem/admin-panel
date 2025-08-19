@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -20,6 +22,12 @@ app.use('/api/profile', profileRoutes);
 
 // Rutas
 app.use('/api/auth', authRoutes);
+
+// Admin
+app.use('/api/admin', adminRoutes);
+
+// Funciones admin
+app.use('/api/users', userRoutes);
 
 // Rutas de prueba
 app.get('/', (req, res) => {
