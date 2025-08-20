@@ -30,7 +30,7 @@ import { addPasswordToggle } from '../components/togglePasswordVisibility.js';
     // Cargar perfil desde el backend
     const loadProfile = async () => {
         try {
-            const res = await fetch(`${API_BASE}/api/profile`, {
+            const res = await fetch(`${API_BASE}/api/users/me`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
