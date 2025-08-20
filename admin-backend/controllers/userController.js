@@ -31,12 +31,28 @@ export const updateUserRole = async (req, res) => {
     }
 };
 
+// Para mostrar el perfil del usuario logueado
 export const getMyProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.userId).select('_id username email role avatar');
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(user);
     } catch (error) {
+        res.status(500).json({ message: 'Error al obtener el perfil' });
+    }
+};
+
+// Para mostrar el perfil de cualquier usuario, siendo admin
+export const getProfile = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const user = await User.findById(userId).select('_id username email role avatar');
+
+        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+        res.json(user);
+    } catch (error) {
+        console.error('getProfile', error);
         res.status(500).json({ message: 'Error al obtener el perfil' });
     }
 };

@@ -3,18 +3,6 @@ import bcrypt from 'bcrypt';
 import fs from 'fs';
 import path from 'path';
 
-// Obtener datos del perfil
-export const getProfile = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.userId).select('_id username email role avatar');
-        if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
-
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener perfil' });
-    }
-};
-
 // Subir o actualizar avatar
 export const uploadAvatar = async (req, res) => {
     try {
