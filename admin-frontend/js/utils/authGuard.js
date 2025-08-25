@@ -3,8 +3,8 @@ export function requireAuth() {
 
     if (!token) {
         window.location.href = 'login.html';
-        return false;
+        return null;
     }
 
-    return true;
+    return token;
 }

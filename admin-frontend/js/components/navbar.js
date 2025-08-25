@@ -2,22 +2,24 @@ export function renderNavbar(currentPage = 'dashboard') {
     const nav = document.createElement('nav');
     nav.className = 'bg-gray-800 text-white sticky top-0 w-full z-50 shadow-md';
 
-    // Se define el texto y el link dinámico para el dropdown
-    let dropdownLinkHref = '';
-    let dropdownLinkText = '';
+    // Obtener datos de usuario almacenados en localStorage
+    const user = JSON.parse(localStorage.getItem('user')) || {};
+    const isAdmin = user.role === 'admin';
+
+    // Construir opciones dinámicas del dropdown
+    let links = [];
 
     if (currentPage === 'dashboard') {
-        dropdownLinkHref = 'profile.html';
-        dropdownLinkText = 'Mi cuenta';
+        links.push({ href: 'profile.html', text: 'Mi cuenta' });
+        if (isAdmin) links.push({ href: 'users.html', text: 'Usuarios' });
     } else if (currentPage === 'profile') {
-        dropdownLinkHref = 'dashboard.html';
-        dropdownLinkText = 'Volver al panel';
+        links.push({ href: 'dashboard.html', text: 'Volver al panel' });
+        if (isAdmin) links.push({ href: 'users.html', text: 'Usuarios' });
+    } else if (currentPage === 'users') {
+        links.push({ href: 'dashboard.html', text: 'Volver al panel' });
+        links.push({ href: 'profile.html', text: 'Mi cuenta' });
     } else if (currentPage === 'password') {
-        dropdownLinkHref = 'profile.html';
-        dropdownLinkText = 'Volver al perfil';
-    } else {
-        dropdownLinkHref = 'profile.html';
-        dropdownLinkText = 'Mi cuenta';
+        links.push({ href: 'profile.html', text: 'Volver al perfil' });
     }
 
     nav.innerHTML = `
@@ -40,8 +42,12 @@ export function renderNavbar(currentPage = 'dashboard') {
                         <p id="dropdownUserName" class="font-semibold"></p>
                         <p id="dropdownUserRole" class="text-sm lowercase opacity-75"></p>
                     </div>
-                    <a href="${dropdownLinkHref}" class="block px-4 py-2 hover:bg-gray-100">${dropdownLinkText}</a>
-                    <button id="logoutBtn" class="w-full text-left px-4 py-2 hover:bg-gray-100">Cerrar sesión</button>
+                    ${links.map(link => `
+                        <a href="${link.href}" class="block px-4 py-2 hover:bg-gray-100">${link.text}</a>
+                    `).join('')}
+                    <button id="logoutBtn" class="w-full text-left px-4 py-2 hover:bg-gray-100">
+                        Cerrar sesión
+                    </button>
                 </div>
             </div>
         </div>
@@ -49,9 +55,7 @@ export function renderNavbar(currentPage = 'dashboard') {
 
     document.body.prepend(nav);
 
-    // Obtener datos de usuario almacenados en localStorage
-    const user = JSON.parse(localStorage.getItem('user')) || {};
-
+    // Referencias a elementos
     const avatarEl = document.getElementById('userAvatar');
     const userNameEl = document.getElementById('userName');
     const userRoleEl = document.getElementById('userRole');
@@ -82,7 +86,7 @@ export function renderNavbar(currentPage = 'dashboard') {
         window.location.href = 'login.html';
     });
 
-    // Opcional: cerrar dropdown si clickeás afuera
+    // Cerrar dropdown si clickeás afuera
     document.addEventListener('click', (e) => {
         if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
             userDropdown.classList.add('hidden');
